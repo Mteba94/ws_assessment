@@ -20,4 +20,8 @@
     <ProjectReference Include="..\assessment.Utilities\assessment.Utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Persistence\ExternalWS\" />
+  </ItemGroup>
+
 </Project>
