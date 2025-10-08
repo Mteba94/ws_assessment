@@ -43,6 +43,13 @@ public static class DependencyInjection
             builder.ConfigureHttpClient(client =>
             {
                 client.BaseAddress = new Uri(configuration["ExternalServices:ws_analiza_sentimiento"]!);
+
+                var apiKey = configuration["ExternalServices:key"];
+
+                if (!string.IsNullOrEmpty(apiKey))
+                {
+                    client.DefaultRequestHeaders.Add("ocp-apim-subscription-key", apiKey);
+                }
             });
         });
 

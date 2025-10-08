@@ -9,7 +9,7 @@ public class AnalizaSentimientosAPI(HttpClient httpClient) : IAnalizaSentimiento
     private readonly HttpClient _httpClient = httpClient;
     public async Task<T> analizarSentimientosPOST<T>(object request)
     {
-        _httpClient.DefaultRequestHeaders.Add("ocp-apim-subscription-key", "5in3QpuPOZrCaDRnAg4na12RkK6gYit2C4g25EEGBW2MMUJnyo6cJQQJ99BJACYeBjFXJ3w3AAAaACOGNZa7");
+        //_httpClient.DefaultRequestHeaders.Add("ocp-apim-subscription-key", "");
 
         var jsonContent = new StringContent(
                 JsonSerializer.Serialize(request),
