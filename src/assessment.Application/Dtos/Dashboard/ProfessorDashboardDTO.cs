@@ -10,6 +10,7 @@ public class ProfessorDashboardDTO
     public StatsDto Stats { get; set; } = default!;
     public RatingsDto Ratings { get; set; } = default!;
     public List<string> RecentComments { get; set; } = new();
+    public CommentsStatsDTO? CommentsStats { get; set; }
 }
 
 public class StatsDto
@@ -27,4 +28,13 @@ public class RatingsDto
     public double Availability { get; set; }
     public double Fairness { get; set; }
     public double Overall { get; set; }
+}
+
+public class CommentsStatsDTO
+{
+    public int TotalComments { get; set; }
+    public int PositiveCount { get; set; }
+    public int NegativeCount { get; set; }
+    public double PositivePercentage { get; set; }
+    public double NegativePercentage { get; set; }
 }

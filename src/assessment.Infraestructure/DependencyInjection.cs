@@ -1,6 +1,8 @@
-﻿using assessment.Application.Interfaces.Persistence;
+﻿using assessment.Application.Interfaces.ExternalWS;
+using assessment.Application.Interfaces.Persistence;
 using assessment.Application.Interfaces.Services;
 using assessment.Infraestructure.Persistence.Context;
+using assessment.Infraestructure.Persistence.ExternalWS;
 using assessment.Infraestructure.Persistence.Repositories;
 using assessment.Infraestructure.Persistence.Services;
 using Microsoft.EntityFrameworkCore;
@@ -40,9 +42,11 @@ public static class DependencyInjection
         {
             builder.ConfigureHttpClient(client =>
             {
-                client.BaseAddress = new Uri(configuration["ExternalServices:EmailService"]!);
+                client.BaseAddress = new Uri(configuration["ExternalServices:ws_analiza_sentimiento"]!);
             });
         });
+
+        services.AddTransient<IAnalizaSentimientosAPI, AnalizaSentimientosAPI>();
 
         //services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
         //services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();

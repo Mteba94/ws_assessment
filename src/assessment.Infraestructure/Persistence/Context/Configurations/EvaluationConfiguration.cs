@@ -15,5 +15,8 @@ internal sealed class EvaluationConfiguration : IEntityTypeConfiguration<Evaluat
 
         builder.Property(e => e.CommentText)
             .HasMaxLength(500);
+
+        builder.Property(e => e.Sentiment)
+            .HasMaxLength(50);
     }
 }

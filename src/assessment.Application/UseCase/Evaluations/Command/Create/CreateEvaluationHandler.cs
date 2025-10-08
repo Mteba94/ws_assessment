@@ -1,5 +1,6 @@
 ﻿using assessment.Application.Abstractions.Messaging;
 using assessment.Application.Commons.Bases;
+using assessment.Application.Interfaces.ExternalWS;
 using assessment.Application.Interfaces.Services;
 using assessment.Domain.Entities;
 using assessment.Utilities.Static;
@@ -7,10 +8,11 @@ using Mapster;
 
 namespace assessment.Application.UseCase.Evaluations.Command.Create;
 
-internal sealed class CreateEvaluationHandler(IUnitOfWork unitOfWork, HandlerExecutor executor) : ICommandHandler<CreateEvaluationCommand, bool>
+internal sealed class CreateEvaluationHandler(IUnitOfWork unitOfWork, HandlerExecutor executor, IAnalizaSentimientosAPI analizaSentimientosAPI) : ICommandHandler<CreateEvaluationCommand, bool>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly HandlerExecutor _executor = executor;
+    private readonly IAnalizaSentimientosAPI _analizaSentimientosAPI = analizaSentimientosAPI;
     public async Task<BaseResponse<bool>> Handle(CreateEvaluationCommand command, CancellationToken cancellationToken)
     {
         return await _executor.ExecuteAsync(command, () => CreateEvaluationAsync(command, cancellationToken), cancellationToken);
@@ -23,7 +25,30 @@ internal sealed class CreateEvaluationHandler(IUnitOfWork unitOfWork, HandlerExe
 
         try
         {
+            object peticion = new
+            {
+                documents = new[]
+                {
+                    new
+                    {
+                        id = 1,
+                        text = command.Comments
+                    }
+                }
+            };
+
+            var analizarSentimientos = await _analizaSentimientosAPI.analizarSentimientosPOST<dynamic>(peticion);
+
             var evaluacion = command.Adapt<Evaluation>();
+
+            var documents = analizarSentimientos.GetProperty("documents");
+            var firstDoc = documents[0];
+            var sentiment = firstDoc.GetProperty("sentiment").GetString();
+
+            evaluacion.Sentiment = sentiment;
+
+            //evaluacion.Sentiment = analizarSentimientos.documents[0].sentiment;
+
 
             await _unitOfWork.Evaluation.CreateAsync(evaluacion);
             await _unitOfWork.SaveChangesAsync(cancellationToken);

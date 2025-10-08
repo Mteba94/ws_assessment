@@ -7,11 +7,21 @@ namespace assessment.Infraestructure.Persistence.Repositories;
 
 public class EvaluationsRepository(ApplicationDbContext _context) : GenericRepository<Evaluation>(_context), IEvaluationsRepository
 {
-    public async Task<Evaluation> GetByProfessorId(int professorId)
+    public async Task<IEnumerable<Evaluation>> GetByProfessorId(int professorId)
     {
         var evaluation = await _context.Evaluations
             .Where(e => e.ProfessorId == professorId)
-            .FirstOrDefaultAsync();
+            .ToListAsync();
+
+        return evaluation!;
+    }
+
+    public async Task<IEnumerable<Evaluation>> GetRecentComments(int professorId)
+    {
+        var evaluation = await _context.Evaluations
+            .Where(e => e.ProfessorId == professorId)
+            .Take(3)
+            .ToListAsync();
 
         return evaluation!;
     }
